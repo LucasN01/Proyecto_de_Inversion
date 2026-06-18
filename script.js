@@ -108,17 +108,24 @@ updateUI();
 
     if (!trigger || !modal || !close) return;
 
+    // Agrega la clase que activa las animaciones CSS
+    modal.classList.add('modal-anim');
+
     trigger.addEventListener('click', () => {
+      modal.classList.remove('closing');
       modal.style.display = 'flex';
     });
 
-    close.addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
+    function closeModal() {
+      modal.classList.add('closing');
+      setTimeout(() => {
+        modal.style.display = 'none';
+        modal.classList.remove('closing');
+      }, 400); // era 250, ahora igual que modalBackdropOut
+    }
 
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.style.display = 'none';
-    });
+    close.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
   }
 
   setupModal('trigger-casa',    'modal-casa',    'modal-close');
